@@ -1,0 +1,11 @@
+# l2-policy.yaml
+apiVersion: cilium.io/v2alpha1
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: default-l2-policy
+spec:
+  loadBalancerIPs: true
+  interfaces:
+    - ^enp[0-9]+s[0-9]+$  # match your node's actual interface name
+  nodeSelector:
+    matchLabels: {}

@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: searxng-config
+data:
+  settings.yml: |
+    use_default_settings: true
+    server:
+      # Generate a real key for production, but this works for local
+      secret_key: "local-dev-key-change-me-later"
+      limiter: false
+      image_proxy: true
+      bind_address: "0.0.0.0"
+      port: 8080
+    search:
+      safe_search: 0
+      autocomplete: "google"
+      formats:
+        - html
+        - json
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: searxng
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: searxng
+  template:
+    metadata:
+      labels:
+        app: searxng
+    spec:
+      containers:
+        - name: searxng
+          image: searxng/searxng:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SEARXNG_BASE_URL
+              value: "http://10.10.10.106/"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/searxng
+      volumes:
+        - name: config
+          configMap:
+            name: searxng-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: searxng-service
+spec:
+  selector:
+    app: searxng
+  ports:
+    - protocol: TCP
+      port: 8888
+      targetPort: 8080
+  type: LoadBalancer

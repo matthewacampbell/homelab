@@ -1,0 +1,10 @@
+# values-homelab.yaml
+httproute:
+  enabled: true
+  parentRefs:
+    - name: homelab-gw
+      namespace: cilium-gateway
+  hostnames:
+    - longhorn.asgaurd.com      # change to whatever hostname you use on the homelab
+  path: /
+  pathType: PathPrefix

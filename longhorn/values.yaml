@@ -1,0 +1,15 @@
+httproute:
+  enabled: true
+  parentRefs:
+    - name: primary-gateway
+      namespace: gateway-system
+    - name: secondary-gateway
+      namespace: gateway-system
+      sectionName: https  # Target specific listener
+  hostnames:
+    - longhorn.asgard.com
+    - longhorn.asgard.org
+  path: /
+  pathType: PathPrefix
+  annotations:
+    custom-annotation: "value"

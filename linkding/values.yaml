@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: linkding-pvc
+  namespace: linkding
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi  # Linkding's database is tiny, 1GB is plenty
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkding
+  namespace: linkding
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: linkding
+  template:
+    metadata:
+      labels:
+        app: linkding
+    spec:
+      containers:
+        - name: linkding
+          image: sissbruecker/linkding:latest
+          ports:
+            - containerPort: 9090
+          env:
+            - name: LD_SERVER_PORT
+              value: "9090"
+            # Optional: Disable registration if you only want one account
+            # - name: LD_DISABLE_REGISTRATION
+            #   value: "True"
+          volumeMounts:
+            - name: linkding-data
+              mountPath: /etc/linkding/data
+      volumes:
+        - name: linkding-data
+          persistentVolumeClaim:
+            claimName: linkding-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: linkding-service
+  namespace: linkding
+spec:
+  selector:
+    app: linkding
+  ports:
+    - protocol: TCP
+      port: 9090        # Access it at http://<pi-ip>:9090
+      targetPort: 9090
+  type: LoadBalancer

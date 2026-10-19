@@ -1,0 +1,9 @@
+# lb-pool.yaml
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: default-pool
+spec:
+  blocks:
+    - start: 10.10.10.100
+      stop: 10.10.10.200

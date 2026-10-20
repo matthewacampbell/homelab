@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: lab
+  name: homelab
   namespace: argocd
 spec:
   goTemplate: true
   generators:
     - git:
         repoURL: https://github.com/matthewacampbell/homelab.git
-        revision: main
+        revision: master
         directories:
           - path: "*"
           - path: cilium
@@ -25,8 +25,8 @@ spec:
     spec:
       project: default
       source:
-        repoURL: https://github.com/matthewacampbell/lab.git
-        targetRevision: main
+        repoURL: https://github.com/matthewacampbell/homelab.git
+        targetRevision: master
         path: "{{.path.path}}"
       destination:
         server: https://kubernetes.default.svc

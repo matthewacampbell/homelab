@@ -33,6 +33,10 @@ spec:
           env:
             - name: LD_SERVER_PORT
               value: "9090"
+            - name: LD_SUPERUSER_NAME
+              value: admin
+            - name: LD_SUPERUSER_PASSWORD
+              value: password
             # Optional: Disable registration if you only want one account
             # - name: LD_DISABLE_REGISTRATION
             #   value: "True"

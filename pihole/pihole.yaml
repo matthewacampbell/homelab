@@ -17,7 +17,7 @@ spec:
         app: pihole
     spec:
       containers:
-        - image: pihole/pihole
+        image: pihole/pihole
         name: pihole
         env:
         - name: TZ
